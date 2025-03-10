@@ -1,4 +1,5 @@
-import { transporter } from "../config/nodemailer"
+import { Resend } from "resend"
+
 
 
 interface Iemail {
@@ -7,11 +8,13 @@ interface Iemail {
     token: string
 }
 
+
+const resend = new Resend('re_XR2fmTqY_F391uUhSKGsjRg9DDXuaMED9');
 export class AuthEmail {
 
     static sendConfirmationEamil = async (user : Iemail) =>{
-        await transporter.sendMail({
-            from: 'UpTASK <admin@uptask.com>',
+        const {data,error} =  await resend.emails.send({
+            from: 'UpTASK <admin@ferrerdev.com>',
             to: user.email,
             subject: 'Uptask-Confirma tu cuenta',
             text:'Uptask-Confirma tu cuenta',
@@ -23,10 +26,16 @@ export class AuthEmail {
             `
 
         })
+        if (error) {
+            return console.error({ error });
+          }
+        
+          console.log({ data });
+
     }
 
     static sendPasswordResetToken = async (user : Iemail) =>{
-        await transporter.sendMail({
+       const {data,error} =  await resend.emails.send({
             from: 'UpTASK <admin@uptask.com>',
             to: user.email,
             subject: 'Uptask-Restabler Contrasenha',
@@ -40,5 +49,10 @@ export class AuthEmail {
             `
 
         })
+        if (error) {
+            return console.error({ error });
+          }
+        
+          console.log({ data });
     }
 }
